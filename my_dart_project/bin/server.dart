@@ -1,16 +1,17 @@
-import 'dart:io';
-
+import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf_router/shelf_router.dart';
 import 'package:my_dart_project/controllers/user_controller.dart';
 
 void main() async {
-  var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
-  print('Server running on http://${server.address.host}:${server.port}');
+  final userController = UserController();
 
-  await for (HttpRequest request in server) {
-    UserController userController = UserController();
-    userController.printHelloOnController();
-    request.response
-      ..write('Hello from Dart backend!')
-      ..close();
-  }
+  final router = Router()
+    ..mount('/users', userController.router.call); // Routes start with /users/
+
+  final handler = Pipeline().addMiddleware(logRequests()).addHandler(router);
+
+  final server = await shelf_io.serve(handler, 'localhost', 8080);
+  server.autoCompress = true;
+  print('✅ Serving at http://${server.address.host}:${server.port}');
 }
