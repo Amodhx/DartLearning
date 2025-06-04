@@ -6,8 +6,7 @@ import 'package:my_dart_project/controllers/user_controller.dart';
 void main() async {
   final userController = UserController();
 
-  final router = Router()
-    ..mount('/users', userController.router.call); // Routes start with /users/
+  final router = Router()..mount('/users', userController.router.call);
 
   final handler = Pipeline().addMiddleware(logRequests()).addHandler(router);
 
