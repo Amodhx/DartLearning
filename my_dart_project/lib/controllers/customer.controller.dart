@@ -10,11 +10,11 @@ class CustomerController {
     return router;
   }
 
-  Response _getAllCustomers() {
+  Response _getAllCustomers(Request request) {
     return Response.ok('All Customers');
   }
 
-  Response _getCustomerById() {
-    return Response.ok("Customer By Id");
+  Response _getCustomerById(Request request, String id) {
+    return Response.ok("Customer By $id");
   }
 }
